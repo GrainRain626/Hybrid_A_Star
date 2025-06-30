@@ -1,0 +1,21 @@
+# ROS 2 colcon build outputs
+build/
+install/
+log/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# CMake temporary files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Visual Studio Code settings (optional)
+.vscode/
+
+# ROS 2 launch/rviz/config temporary files (optional)
+*.swp
+*.bak

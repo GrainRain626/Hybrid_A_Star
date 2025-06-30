@@ -1,0 +1,25 @@
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 1
+      Cell Size: 1
+      Color Scheme: map
+      Draw Behind: true
+      Name: Map
+      Topic: /map
+      Type: rviz/Map
+    - Name: Grid
+      Type: rviz/Grid
+  Global Options:
+    Fixed Frame: map
+    Background Color: [0, 0, 0]
+    Frame Rate: 30
+  Tools:
+    - Class: rviz/Interact
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+    - Class: rviz/SetGoal
+  Value: true
