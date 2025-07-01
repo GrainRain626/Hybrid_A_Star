@@ -1,13 +1,5 @@
 # 基于Hybrid A Star的车辆路径规划
 
-**版本**
-
-| 版本号 |           描述           |    时间    |
-| :----: | :----------------------: | :--------: |
-|  V0.1  | 创建文档，并编写基本内容 | 2025.06.30 |
-
-
-
 ## 0. 项目描述
 
 This project uses C++ and ROS2 to implement vehicle trajectory planning and control, combining Hybrid A* and Model Predictive Control (MPC) for autonomous path generation and dynamic tracking.
@@ -43,7 +35,7 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 **基础功能**：
 
 1. 地图导入与建图
-   * 1.0：只考虑静态地图，不考虑动态
+   * 0.1：只考虑静态地图，不考虑动态
 2. 轨迹优化
 
 ![image-20250630160332100](https://picgo-img-lyx.oss-cn-hangzhou.aliyuncs.com/img/image-20250630160332100.png)
@@ -80,16 +72,16 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 **输入**：
 
-|      数据名      |                数据描述                |     数据类型     |    订阅    |
-| :--------------: | :------------------------------------: | :--------------: | :--------: |
-| `staticMapData`  |              静态地图文件              | `.pgm` + `.yaml` |  文件读取  |
-| `currentMapData` | 动态地图信息（如果有的话，初期不考虑） |                  | `/cur_map` |
+|      数据名      |                数据描述                |            数据类型            |    订阅    |
+| :--------------: | :------------------------------------: | :----------------------------: | :--------: |
+|      `msg`       | 静态地图文件，由`nav2_map_server`提供  | `nav_msgs::msg::OccupancyGrid` |   `/map`   |
+| `currentMapData` | 动态地图信息（如果有的话，初期不考虑） |                                | `/cur_map` |
 
 **输出**：	
 
-|  数据名   | 数据描述 |                 数据类型                 |  发布  |
-| :-------: | :------: | :--------------------------------------: | :----: |
-| `mapData` | 地图文件 | `/map`（`nav_msgs::msg::OccupancyGrid`） | `/map` |
+|     数据名      | 数据描述 |            数据类型            |       发布       |
+| :-------------: | :------: | :----------------------------: | :--------------: |
+| `processed_map` | 地图文件 | `nav_msgs::msg::OccupancyGrid` | `/processed_map` |
 
 ### 2.2 路径规划
 
@@ -105,11 +97,11 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 **输入**：
 
-|    数据名    | 数据描述 |             数据类型              |      订阅      |
-| :----------: | :------: | :-------------------------------: | :------------: |
-|  `mapData`   | 地图文件 |  `nav_msgs::msg::OccupancyGrid`   |     `/map`     |
-| `startPoint` |   起点   | `geometry_msgs::msg::PoseStamped` | `/start_point` |
-|  `endPoint`  |   终点   | `geometry_msgs::msg::PoseStamped` |  `/end_point`  |
+|    数据名    | 数据描述 |             数据类型              |       订阅       |
+| :----------: | :------: | :-------------------------------: | :--------------: |
+|  `mapData`   | 地图文件 |  `nav_msgs::msg::OccupancyGrid`   | `/processed_map` |
+| `startPoint` |   起点   | `geometry_msgs::msg::PoseStamped` |  `/start_point`  |
+|  `endPoint`  |   终点   | `geometry_msgs::msg::PoseStamped` |   `/goal_pose`   |
 
 **输出**：
 
@@ -184,8 +176,6 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 
 ### 2.6 Rviz可视化
-
-
 
 
 

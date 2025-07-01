@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>map_loader</name>
-  <version>0.0.2</version>
+  <version>0.2</version>
   <description>Map loader for Hybrid A*</description>
   <maintainer email="2670378924@qq.com">lyx</maintainer>
   <license>MIT</license>
