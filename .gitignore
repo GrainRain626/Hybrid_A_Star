@@ -19,3 +19,6 @@ Makefile
 # ROS 2 launch/rviz/config temporary files (optional)
 *.swp
 *.bak
+
+.history/
+
