@@ -12,7 +12,7 @@ MapLoader::MapLoader() : Node("map_loader")
     qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_RELIABLE);  // 明确设置可靠性策略
 
     map_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
-      "/map", 1, std::bind(&MapLoader::mapCallback, this, std::placeholders::_1));
+      "/map", qos_profile, std::bind(&MapLoader::mapCallback, this, std::placeholders::_1));
     map_pub_ = this->create_publisher<nav_msgs::msg::OccupancyGrid>("/processed_map", qos_profile);
 }
 

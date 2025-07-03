@@ -58,9 +58,6 @@ void HybridAStarPlanner::try_plan()
 
     RCLCPP_INFO(this->get_logger(), "Planning path using Hybrid A*...");
 
-    // 如果没有地图，则不进行规划
-    if (!has_map_) return;
-    
     // 这里你将接入 Hybrid A* 算法：
     // 1. 将地图转换为 costmap/gridmap
     // 2. 调用你的 Hybrid A* 规划器接口

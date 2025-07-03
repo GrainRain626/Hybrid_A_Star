@@ -6,9 +6,9 @@ HybridAStarPlanner::HybridAStarPlanner() : Node("hybrid_astar_planner")
     rclcpp::QoS qos_profile(rclcpp::KeepLast(1));  // 历史策略：保留最后1条消息
     qos_profile.durability(RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL);  // 明确设置耐久性策略
     qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_RELIABLE);  // 明确设置可靠性策略
-
+    
     map_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
-        "/processed_map", qos_profile,
+        "/processed_map", 1,
         std::bind(&HybridAStarPlanner::map_callback, this, std::placeholders::_1));
 
     start_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
@@ -58,9 +58,6 @@ void HybridAStarPlanner::try_plan()
 
     RCLCPP_INFO(this->get_logger(), "Planning path using Hybrid A*...");
 
-    // 如果没有地图，则不进行规划
-    if (!has_map_) return;
-    
     // 这里你将接入 Hybrid A* 算法：
     // 1. 将地图转换为 costmap/gridmap
     // 2. 调用你的 Hybrid A* 规划器接口
