@@ -1,5 +1,8 @@
 #include "hybrid_astar_planner/planner.hpp"
 
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
+
 double vehicle_length_;
 double vehicle_width_;
 double vehicle_rear_dis_;
@@ -11,6 +14,21 @@ HybridAStarPlanner::HybridAStarPlanner() : Node("hybrid_astar_planner")
     /*
     TODO：参数获取，构造 Hybrid A* 规划器
     */
+    // 1. 声明参数（声明后才可以get_parameter，建议全部在构造函数声明）
+    this->declare_parameter<double>("planner.steering_angle", 30.0);
+    this->declare_parameter<int>("planner.steering_angle_discrete_num", 2);
+    this->declare_parameter<double>("planner.wheel_base", 0.8);
+    this->declare_parameter<double>("planner.segment_length", 1.0);
+    this->declare_parameter<int>("planner.segment_length_discrete_num", 8);
+    this->declare_parameter<double>("planner.steering_penalty", 1.2);
+    this->declare_parameter<double>("planner.steering_change_penalty", 1.5);
+    this->declare_parameter<double>("planner.reversing_penalty", 2.0);
+    this->declare_parameter<double>("planner.shot_distance", 15.0);
+    this->declare_parameter<bool>("planner.reverse_enable", false);
+
+    this->declare_parameter<double>("planner.vehicle_length", 2.0);
+    this->declare_parameter<double>("planner.vehicle_width", 1.0);
+    this->declare_parameter<double>("planner.vehicle_rear_dis", 0.5);
     // 获取参数
     double steering_angle = this->get_parameter("planner.steering_angle").as_double();
     int steering_angle_discrete_num = this->get_parameter("planner.steering_angle_discrete_num").as_int();
@@ -60,9 +78,9 @@ HybridAStarPlanner::HybridAStarPlanner() : Node("hybrid_astar_planner")
 
 void HybridAStarPlanner::map_callback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
 {
-    current_map_ptr_ = msg;
+    current_costmap_ptr_ = msg;
     RCLCPP_INFO(this->get_logger(), "load map successfully, resolution: %f, timestamp: %f",
-                current_map_ptr_->info.resolution, current_map_ptr_->header.stamp.sec + current_map_ptr_->header.stamp.nanosec * 1e-9);
+                current_costmap_ptr_->info.resolution, current_costmap_ptr_->header.stamp.sec + current_costmap_ptr_->header.stamp.nanosec * 1e-9);
     has_map_ = true;
     hybridAStarInit();
     try_plan();
@@ -143,7 +161,7 @@ void HybridAStarPlanner::hybridAStarInit()
 bool HybridAStarPlanner::isSynchronized(
     const nav_msgs::msg::OccupancyGrid &map,
     const geometry_msgs::msg::PoseStamped &start,
-    const geometry_msgs::msg::PoseStamped &goal)
+    const geometry_msgs::msg::PoseStamped &goal) const
 {
     // 检查地图、起点和目标点的时间戳是否同步
     if (map.header.stamp.sec == 0 || start.header.stamp.sec == 0 || goal.header.stamp.sec == 0) {
@@ -178,18 +196,27 @@ void HybridAStarPlanner::try_plan()
         RCLCPP_WARN(this->get_logger(), "Data not synchronized, waiting for more data...");
         return;
     }*/
+
     // 规划
     RCLCPP_INFO(this->get_logger(), "Planning started...");
-    double start_yaw = tf::getYaw(current_init_pose_ptr_->pose.pose.orientation);
-    double goal_yaw = tf::getYaw(current_goal_pose_ptr_->pose.orientation);
+    // ros2中的tf2并没有getYaw函数，所以需要自己计算
+    double row, pitch, start_yaw = 0.0, goal_yaw = 0.0;
+    const auto& start_q_msg = start_pose_ptr_->pose.orientation;
+    const auto& goal_q_msg = goal_pose_ptr_->pose.orientation;
+    tf2::Matrix3x3( 
+        tf2::Quaternion(start_q_msg.x, start_q_msg.y, start_q_msg.z, start_q_msg.w)
+    ).getRPY(row, pitch, start_yaw);
+    tf2::Matrix3x3( 
+        tf2::Quaternion(goal_q_msg.x, goal_q_msg.y, goal_q_msg.z, goal_q_msg.w)
+    ).getRPY(row, pitch, goal_yaw);
     Vec3d start_state = Vec3d(
-            current_init_pose_ptr_->pose.pose.position.x,
-            current_init_pose_ptr_->pose.pose.position.y,
+            start_pose_ptr_->pose.position.x,
+            start_pose_ptr_->pose.position.y,
             start_yaw
     );
     Vec3d goal_state = Vec3d(
-            current_goal_pose_ptr_->pose.position.x,
-            current_goal_pose_ptr_->pose.position.y,
+            goal_pose_ptr_->pose.position.x,
+            goal_pose_ptr_->pose.position.y,
             goal_yaw
     );
 

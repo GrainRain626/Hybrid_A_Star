@@ -28,9 +28,9 @@
 #ifndef HYBRID_A_STAR_HYBRID_A_STAR_H
 #define HYBRID_A_STAR_HYBRID_A_STAR_H
 
-#include "rs_path.h"
-#include "state_node.h"
-#include "dubins.h"
+#include "rs_path.hpp"
+#include "state_node.hpp"
+#include "dubins.hpp"
 
 #include <glog/logging.h>
 

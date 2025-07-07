@@ -9,7 +9,7 @@
  * @date 2019-11-19 
  */
 
-#include "hybrid_astar_algorithm/bucketedqueue.h"
+#include "hybrid_astar_algorithm/bucketedqueue.hpp"
 
 #include "limits.h"
 #include <stdio.h>

@@ -28,7 +28,7 @@
 #ifndef DUBINS_CPP
 #define DUBINS_CPP
 
-#include "hybrid_astar_algorithm/dubins.h"
+#include "hybrid_astar_algorithm/dubins.hpp"
 #define _USE_MATH_DEFINES // for C++
 #include <math.h>
 #include <assert.h>

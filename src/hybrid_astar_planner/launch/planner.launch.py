@@ -7,14 +7,6 @@ def generate_launch_description():
     pkg_share = FindPackageShare("hybrid_astar_planner").find("hybrid_astar_planner")
 
     return LaunchDescription([
-        # 起点桥接节点
-        Node(
-            package="hybrid_astar_planner",
-            executable="pose_bridge_node",
-            name="pose_bridge",
-            output="screen",
-        ),
-        
         # 混合A*规划器节点
         Node(
             package="hybrid_astar_planner",

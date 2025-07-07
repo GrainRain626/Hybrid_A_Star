@@ -25,7 +25,7 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-#include "hybrid_a_star/rs_path.h"
+#include "hybrid_astar_algorithm/rs_path.hpp"
 
 #include <glog/logging.h>
 #include <iostream>

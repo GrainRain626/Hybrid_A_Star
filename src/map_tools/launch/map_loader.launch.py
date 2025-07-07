@@ -6,7 +6,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     map_path = PathJoinSubstitution([
-        FindPackageShare('map_loader'),
+        FindPackageShare('map_tools'),
         'maps',
         'map.yaml'
     ])
@@ -31,9 +31,16 @@ def generate_launch_description():
             ]
         ),
         Node(
-            package='map_loader',
+            package='map_tools',
             executable='map_loader_node',
             name='map_loader',
             output='screen'
-        )
+        ),
+        # 起点桥接节点
+        Node(
+            package="map_tools",
+            executable="pose_bridge_node",
+            name="pose_bridge",
+            output="screen",
+        ),
     ])

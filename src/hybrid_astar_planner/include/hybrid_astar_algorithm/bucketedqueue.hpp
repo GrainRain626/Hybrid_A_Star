@@ -19,7 +19,7 @@
 #include <set>
 #include <queue>
 #include <assert.h>
-#include "hybrid_astar_algorithm/point.h"
+#include "hybrid_astar_algorithm/point.hpp"
 
 namespace DVORONOI {
 //! Priority queue for integer coordinates with squared distances as priority.

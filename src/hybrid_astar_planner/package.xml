@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>hybrid_astar_planner</name>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <description>hybrid A* path planner node for vehicle trajectory planning.</description>
   <maintainer email="2670378924@qq.com">lyx</maintainer>
   <license>TODO: License declaration</license>
@@ -13,7 +13,15 @@
   <depend>rclcpp</depend>
   <depend>nav_msgs</depend>
   <depend>geometry_msgs</depend>
-  
+  <depend>Eigen3</depend>
+  <depend>opencv</depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <build_depend>glog</build_depend>
+  <exec_depend>glog</exec_depend>
+  <build_depend>tf2</build_depend>
+  <exec_depend>tf2</exec_depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 

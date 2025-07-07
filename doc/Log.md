@@ -10,6 +10,99 @@
    * 将混合A*代码中涉及ROS1的部分去除（目前来看是`display_tools.h`这一块）
    * 将混合A*代码中涉及轨迹优化的部分去除
    * 已经大体移植完毕，需要检查
+6. [安装Glog库](https://www.cnblogs.com/tdyizhen1314/p/18047566)
+
+
+
+```text
+1. 包名：hybrid_astar_planner
+2. 源码结构：
+   - src/bucketedqueue.cpp
+        #include "hybrid_astar_algorithm/bucketedqueue.h"
+        #include "limits.h"
+        #include <stdio.h>
+        #include <stdlib.h>
+   - src/dubins.cpp
+        #include "hybrid_astar_algorithm/dubins.h"
+        #include <math.h>
+        #include <assert.h>
+   - src/dynamicvoronoi.cpp
+        #include "hybrid_a_star/dynamicvoronoi.h"
+        #include <math.h>
+        #include <iostream>
+        #include <opencv4/opencv2/core.hpp>
+   - src/hybrid_a_star.cpp
+        #include "hybrid_astar_algorithm/hybrid_a_star.h"
+        #include "hybrid_astar_algorithm/display_tools.h"
+        #include "hybrid_astar_algorithm/timer.h"
+        #include "hybrid_astar_algorithm/trajectory_optimizer.h"
+        #include <iostream>
+   - src/planner_node.cpp
+		#include "hybrid_astar_planner/planner.hpp"
+   - src/planner.cpp
+		#include "hybrid_astar_planner/planner.hpp"
+   - src/rs_path.cpp
+        #include "hybrid_a_star/rs_path.h"
+        #include <glog/logging.h>
+        #include <iostream>
+   - include/hybrid_astar_planner/planner.hpp
+		#include "rclcpp/rclcpp.hpp"
+        #include "geometry_msgs/msg/pose_stamped.hpp"
+        #include "nav_msgs/msg/occupancy_grid.hpp"
+        #include "nav_msgs/msg/path.hpp"
+        #include "hybrid_astar_algorithm/hybrid_a_star.h"
+        #include "hybrid_astar_algorithm/dynamicvoronoi.h"
+   - include/hybrid_astar_algorithm/bucketedqueue.hpp
+        #include <vector>
+        #include <set>
+        #include <queue>
+        #include <assert.h>
+        #include "hybrid_astar_algorithm/point.h"
+   - include/hybrid_astar_algorithm/dubins.hpp
+   - include/hybrid_astar_algorithm/dynamicvoronoi.hpp
+        #include <stdlib.h>
+        #include <stdio.h>
+        #include <limits.h>
+        #include <queue>
+        #include "bucketedqueue.h"
+   - include/hybrid_astar_algorithm/hybrid_a_star.hpp
+        #include "rs_path.h"
+        #include "state_node.h"
+        #include "dubins.h"
+        #include <glog/logging.h>
+        #include <map>
+        #include <memory>
+   - include/hybrid_astar_algorithm/point.hpp
+   - include/hybrid_astar_algorithm/rs_path.hpp
+        #include "type.h"
+        #include <cmath>
+        #include <limits>
+   - include/hybrid_astar_algorithm/state_node.hpp
+        #include "type.h"
+        #include <Eigen/Dense>
+   - include/hybrid_astar_algorithm/timer.hpp
+        #include <string>
+        #include <iostream>
+        #include <chrono>
+   - include/hybrid_astar_algorithm/type.hpp
+        #include <vector>
+        #include <Eigen/Core>
+3. 可执行文件：
+   - planner_node（由src/planner_node.cpp编译）
+4. 依赖包：
+   - rclcpp
+   - geometry_msgs
+   - nav_msgs
+   - eigen
+   - opencv
+5. 其他需要安装的资源：
+   - config/planner_params.yaml
+   - launch/planner.launch.py
+6. 只需可执行文件，不需要生成库/插件
+
+```
+
+
 
 
 

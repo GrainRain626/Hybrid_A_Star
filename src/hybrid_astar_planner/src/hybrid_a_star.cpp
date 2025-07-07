@@ -25,10 +25,11 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-#include "hybrid_astar_algorithm/hybrid_a_star.h"
-#include "hybrid_astar_algorithm/display_tools.h"
-#include "hybrid_astar_algorithm/timer.h"
-#include "hybrid_astar_algorithm/trajectory_optimizer.h"
+#include "hybrid_astar_algorithm/hybrid_a_star.hpp"
+// #include "hybrid_astar_algorithm/display_tools.hpp"
+#include "hybrid_astar_algorithm/timer.hpp"
+// #include "hybrid_astar_algorithm/trajectory_optimizer.hpp"
+#include "rclcpp/rclcpp.hpp"
 
 #include <iostream>
 
@@ -578,8 +579,10 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
                 std::cout << "average time of check collision(ms): "
                           << check_collision_use_time / num_check_collision
                           << std::endl;
-                ROS_INFO("\033[1;32m --> Time in Hybrid A star is %f ms, path length: %f  \033[0m",
-                         search_used_time.End(), path_length_);
+                std::cout << "Time in Hybrid A star is " << search_used_time.End() << " ms, path length: "
+                          << path_length_ << std::endl;
+                // RCLCPP_INFO(this->get_logger(), "\033[1;32m --> Time in Hybrid A star is %f ms, path length: %f  \033[0m",
+                //         search_used_time.End(), path_length_);
 
                 check_collision_use_time = 0.0;
                 num_check_collision = 0.0;
@@ -635,7 +638,8 @@ bool HybridAStar::Search(const Vec3d &start_state, const Vec3d &goal_state) {
 
         count++;
         if (count > 50000) {
-            ROS_WARN("Exceeded the number of iterations, the search failed");
+            std::cout << "Exceeded the number of iterations, the search failed" << std::endl;
+            // RCLCPP_WARN(this->get_logger(), "Exceeded the number of iterations, the search failed");
             return false;
         }
     }

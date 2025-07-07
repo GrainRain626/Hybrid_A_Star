@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(map_loader)
+project(map_tools)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -22,17 +22,34 @@ find_package(ament_cmake REQUIRED)
 # find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
+# 头文件目录
 include_directories(include)
+
+# map_loader_node
 add_executable(map_loader_node src/map_loader.cpp)
 ament_target_dependencies(map_loader_node rclcpp nav_msgs)
 
+# pose_bridge_node
+add_executable(pose_bridge_node src/initialpose_to_startpoint.cpp)
+ament_target_dependencies(pose_bridge_node rclcpp geometry_msgs)
+
+# 安装可执行文件
+install(TARGETS pose_bridge_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 install(TARGETS map_loader_node
-  DESTINATION lib/${PROJECT_NAME})
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 
 install(DIRECTORY launch maps
-  DESTINATION share/${PROJECT_NAME})
+  DESTINATION share/${PROJECT_NAME}
+)
   
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights

@@ -17,35 +17,59 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(PkgConfig REQUIRED)
+find_package(tf2 REQUIRED)
+pkg_check_modules(GLOG REQUIRED libglog)
 
 # 头文件目录
-include_directories(include)
-
-# 添加源文件和生成可执行文件
-add_executable(planner_node src/planner.cpp)
-
-# 链接依赖库
-ament_target_dependencies(planner_node rclcpp nav_msgs geometry_msgs)
-
-add_executable(pose_bridge_node src/initialpose_to_startpoint.cpp)
-ament_target_dependencies(pose_bridge_node rclcpp geometry_msgs)
-
-# 安装可执行文件
-install(TARGETS pose_bridge_node
-  DESTINATION lib/${PROJECT_NAME}
+include_directories(
+  include
+  ${EIGEN3_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
+# 源文件列表
+set(SOURCES
+  src/bucketedqueue.cpp
+  src/dubins.cpp
+  src/dynamicvoronoi.cpp
+  src/hybrid_a_star.cpp
+  src/planner.cpp
+  src/planner_node.cpp
+  src/rs_path.cpp
+)
+
+# 添加源文件和生成可执行文件
+add_executable(planner_node ${SOURCES})
+
+# 链接依赖库
+ament_target_dependencies(planner_node 
+  rclcpp 
+  nav_msgs 
+  geometry_msgs
+  tf2
+)
+
+target_link_libraries(planner_node
+  Eigen3::Eigen
+  ${OpenCV_LIBS}
+  ${GLOG_LIBRARIES}
+)
+target_include_directories(planner_node PRIVATE
+  ${GLOG_INCLUDE_DIRS}
+)
+
+# 安装可执行文件
 install(TARGETS planner_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# 安装头文件（如果你后续封装 Hybrid A* 类）
+# 安装头文件（如果后续封装 Hybrid A* 类）
 install(DIRECTORY include/
   DESTINATION include/
 )

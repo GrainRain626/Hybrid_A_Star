@@ -14,7 +14,7 @@
  *      B. Lau, C. Sprunk and W. Burgard, Improved Updating of Euclidean Distance Maps and Voronoi Diagrams, 
  *  IEEE Intl. Conf. on Intelligent Robots and Systems (IROS), Taipei, Taiwan, 2010.
  */
-#include "hybrid_a_star/dynamicvoronoi.h"
+#include "hybrid_astar_algorithm/dynamicvoronoi.hpp"
 
 #include <math.h>
 #include <iostream>

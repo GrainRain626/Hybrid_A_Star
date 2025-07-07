@@ -22,7 +22,7 @@
 #include <limits.h>
 #include <queue>
 
-#include "bucketedqueue.h"
+#include "bucketedqueue.hpp"
 
 namespace DVORONOI {
 //! A DynamicVoronoi object computes and updates a distance map and Voronoi diagram.

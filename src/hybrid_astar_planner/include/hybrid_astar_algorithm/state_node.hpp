@@ -28,7 +28,7 @@
 #ifndef HYBRID_A_STAR_STATE_NODE_H
 #define HYBRID_A_STAR_STATE_NODE_H
 
-#include "type.h"
+#include "type.hpp"
 
 #include <Eigen/Dense>
 

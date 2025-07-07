@@ -4,8 +4,8 @@
 #include "geometry_msgs/msg/pose_stamped.hpp"
 #include "nav_msgs/msg/occupancy_grid.hpp"
 #include "nav_msgs/msg/path.hpp"
-#include "hybrid_astar_algorithm/hybrid_a_star.h"
-#include "hybrid_astar_algorithm/dynamicvoronoi.h"
+#include "hybrid_astar_algorithm/hybrid_a_star.hpp"
+#include "hybrid_astar_algorithm/dynamicvoronoi.hpp"
 
 class HybridAStarPlanner : public rclcpp::Node {
 public:
@@ -37,7 +37,7 @@ private:
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_pub_;
 
     // 数据缓存
-    nav_msgs::msg::OccupancyGrid::SharedPtr current_map_ptr_;
+    nav_msgs::msg::OccupancyGrid::SharedPtr current_costmap_ptr_;
     geometry_msgs::msg::PoseStamped::SharedPtr start_pose_ptr_;
     geometry_msgs::msg::PoseStamped::SharedPtr goal_pose_ptr_;
 
