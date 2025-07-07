@@ -11,6 +11,8 @@
 
 2025.07.03-00:30 "map_loader v0.0.3": 解决问题1，发现问题2
 
+2025.07.07-19:30 “add planner algorithm but no checking”：将Hybrid A*算法类移植到了`planner`节点，但是没有编译检查问题
+
 
 ## 问题
 

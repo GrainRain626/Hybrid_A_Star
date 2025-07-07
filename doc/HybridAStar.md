@@ -66,7 +66,7 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 * 建议：使用 `nav2_map_server` 提供地图服务
 
-**包名**：`map_loader`
+**包名**：`map_tools`
 
 **节点名**：`map_loader`
 
@@ -95,13 +95,17 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 * 可使用开源项目如 [zm0612/Hybrid_A_Star](https://github.com/zm0612/Hybrid_A_Star) 进行改造。
 
+**包名**：`hybrid_astar_planner`
+
+**节点名**：`planner`
+
 **输入**：
 
-|    数据名    | 数据描述 |             数据类型              |       订阅       |
-| :----------: | :------: | :-------------------------------: | :--------------: |
-|  `mapData`   | 地图文件 |  `nav_msgs::msg::OccupancyGrid`   | `/processed_map` |
-| `startPoint` |   起点   | `geometry_msgs::msg::PoseStamped` |  `/start_point`  |
-|  `endPoint`  |   终点   | `geometry_msgs::msg::PoseStamped` |   `/goal_pose`   |
+|     数据名     | 数据描述 |             数据类型              |       订阅       |
+| :------------: | :------: | :-------------------------------: | :--------------: |
+| `current_map_` | 地图文件 |  `nav_msgs::msg::OccupancyGrid`   | `/processed_map` |
+| `start_pose_`  |   起点   | `geometry_msgs::msg::PoseStamped` |  `/start_point`  |
+|  `goal_pose_`  |   终点   | `geometry_msgs::msg::PoseStamped` |   `/goal_pose`   |
 
 **输出**：
 
@@ -174,8 +178,6 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 | `currentMapData` | 实时地图信息（当前阶段不考虑） |                           | `/cur_map` |
 
 
-
-### 2.6 Rviz可视化
 
 
 

@@ -51,7 +51,7 @@ install(DIRECTORY include/
 )
 
 # 安装 launch 文件（如果有）
-install(DIRECTORY launch
+install(DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -21,6 +21,7 @@ def generate_launch_description():
             executable="planner_node",
             name="hybrid_astar_planner",
             output="screen",
+            parameters=[os.path.join(pkg_share, "config", "planner_params.yaml")],
         ),
 
         # 可选：自动加载 RViz2 可视化配置（如存在）
