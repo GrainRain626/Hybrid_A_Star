@@ -15,6 +15,7 @@
   <depend>geometry_msgs</depend>
   <depend>Eigen3</depend>
   <depend>opencv</depend>
+  <depend>planning_utils</depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
   <build_depend>glog</build_depend>

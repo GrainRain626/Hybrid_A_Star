@@ -25,6 +25,8 @@ find_package(OpenCV REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(tf2 REQUIRED)
 pkg_check_modules(GLOG REQUIRED libglog)
+# 查找planning_utils包
+find_package(planning_utils REQUIRED)
 
 # 头文件目录
 include_directories(
@@ -53,9 +55,11 @@ ament_target_dependencies(planner_node
   nav_msgs 
   geometry_msgs
   tf2
+  planning_utils
 )
 
 target_link_libraries(planner_node
+  planning_utils
   Eigen3::Eigen
   ${OpenCV_LIBS}
   ${GLOG_LIBRARIES}

@@ -68,7 +68,7 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 **包名**：`map_tools`
 
-**节点名**：`map_loader`
+**节点名**：`map_loader_node`
 
 **输入**：
 
@@ -97,15 +97,15 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 **包名**：`hybrid_astar_planner`
 
-**节点名**：`planner`
+**节点名**：`planner_node`
 
 **输入**：
 
-|     数据名     | 数据描述 |             数据类型              |       订阅       |
-| :------------: | :------: | :-------------------------------: | :--------------: |
-| `current_map_` | 地图文件 |  `nav_msgs::msg::OccupancyGrid`   | `/processed_map` |
-| `start_pose_`  |   起点   | `geometry_msgs::msg::PoseStamped` |  `/start_point`  |
-|  `goal_pose_`  |   终点   | `geometry_msgs::msg::PoseStamped` |   `/goal_pose`   |
+|         数据名         | 数据描述 |                   数据类型                   |       订阅       |
+| :--------------------: | :------: | :------------------------------------------: | :--------------: |
+| `current_costmap_ptr_` | 地图数据 |  `nav_msgs::msg::OccupancyGrid::SharedPtr`   | `/processed_map` |
+|   `start_pose_ptr_`    |   起点   | `geometry_msgs::msg::PoseStamped::SharedPtr` |  `/start_point`  |
+|    `goal_pose_ptr_`    |   终点   | `geometry_msgs::msg::PoseStamped::SharedPtr` |   `/goal_pose`   |
 
 **输出**：
 
@@ -120,6 +120,10 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 对 A* 输出的折线路径进行平滑或再优化，提高可控性和轨迹平稳性。
 
 * 优化方式：Cubic Splines、Bezier 曲线、CHOMP、Ceres 等
+
+**包名**：`path_smoother`
+
+**节点名**：`smoother_node`
 
 **输入**：
 

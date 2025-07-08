@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>planning_utils</name>
+  <version>0.0.1</version>
+  <description>Common utilities for planning and smoothing.</description>
+  <maintainer email="you@email.com">Your Name</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <build_depend>Eigen3</build_depend>
+  <build_depend>opencv</build_depend>
+  <exec_depend>Eigen3</exec_depend>
+  <exec_depend>opencv</exec_depend>
+</package>

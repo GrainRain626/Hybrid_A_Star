@@ -23,10 +23,11 @@ private:
         const geometry_msgs::msg::PoseStamped &goal) const; // 检查地图、起点和目标点是否同步
     void try_plan();  // 在条件满足时触发规划
     void hybridAStarInit(); // 初始化 Hybrid A* 规划器
-
+    void publishPath(const VectorVec4d &path); // 发布规划路径
+    
     // 规划相关
     std::shared_ptr<HybridAStar> kinodynamic_astar_searcher_ptr_;
-
+    
     // The voronoi diagram
     DVORONOI::DynamicVoronoi voronoiDiagram; //Voroni Diagram
 

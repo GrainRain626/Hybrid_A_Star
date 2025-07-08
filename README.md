@@ -13,6 +13,10 @@
 
 2025.07.07-19:30 “add planner algorithm but no checking”：将Hybrid A*算法类移植到了`planner`节点，但是没有编译检查问题
 
+2025.07.08-02:00 "map_tools v0.0.4 and planner v0.0.3": 完善了项目结构，将移植了混合A\*算法的项目流程跑通了，但是路径输出有问题，在Rviz中无法正常显示
+
+2025.07.08-19:00 "add smoother and utils code but no checking"：新建`planning_utils`包来存放共用头文件，新建路径优化功能包，待完善
+
 
 ## 问题
 

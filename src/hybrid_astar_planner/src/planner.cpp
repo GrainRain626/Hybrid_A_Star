@@ -11,9 +11,6 @@ double steering_angle_;
 
 HybridAStarPlanner::HybridAStarPlanner() : Node("hybrid_astar_planner")
 {
-    /*
-    TODO：参数获取，构造 Hybrid A* 规划器
-    */
     // 1. 声明参数（声明后才可以get_parameter，建议全部在构造函数声明）
     this->declare_parameter<double>("planner.steering_angle", 30.0);
     this->declare_parameter<int>("planner.steering_angle_discrete_num", 2);
@@ -179,6 +176,36 @@ bool HybridAStarPlanner::isSynchronized(
     return (time_diff_start < 0.5 && time_diff_goal < 0.5); // 允许0.5秒的时间差
 }
 
+// 发布规划路径
+void HybridAStarPlanner::publishPath(const VectorVec4d &path) 
+{
+    nav_msgs::msg::Path planned_path;  // 不要直接用成员，避免旧数据堆积
+    planned_path.header.frame_id = "world";
+    planned_path.header.stamp = this->now();
+
+    for (const auto &pose: path) {
+        geometry_msgs::msg::PoseStamped pose_stamped;
+        pose_stamped.header.frame_id = "world";
+        pose_stamped.header.stamp = this->now();
+        pose_stamped.pose.position.x = pose.x();
+        pose_stamped.pose.position.y = pose.y();
+        pose_stamped.pose.position.z = 0.0;
+
+        // 用 tf2::Quaternion 生成四元数
+        tf2::Quaternion q;
+        q.setRPY(0, 0, pose.z());  // 只绕Z轴旋转
+        pose_stamped.pose.orientation.x = q.x();
+        pose_stamped.pose.orientation.y = q.y();
+        pose_stamped.pose.orientation.z = q.z();
+        pose_stamped.pose.orientation.w = q.w();
+
+        planned_path.poses.emplace_back(pose_stamped);
+    }
+
+    planned_path_ = planned_path;  // 更新成员变量
+    path_pub_->publish(planned_path);
+}
+
 void HybridAStarPlanner::try_plan()
 {
     // 检查是否有足够的数据进行规划
@@ -227,16 +254,16 @@ void HybridAStarPlanner::try_plan()
             double path_yaw = atan2((path[1] -path[0])(1), (path[1] -path[0])(0));
             if(abs(start_yaw - path_yaw) > 0.5 * M_PI)  path[0](3) = 0;
         }
-        path_pub_->publish(planned_path_);
+        pulishPath(path);
         RCLCPP_INFO(this->get_logger(), "Path published.");
         /*
-        // 路径平滑过程
-        smoother.tracePath(path);
-        PublishPath(path);
-        
         PublishVehiclePath(path, vehicle_length_, vehicle_width_, 5u);
         PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
         PublishCurrentStartAndGoal();
+        */
+        /*
+        // 路径平滑过程
+        smoother.tracePath(path);
         Timer smooth_used_time;
         smoother.smoothPath(voronoiDiagram);
         std::cout << "Soomthen the path time(ms): " << smooth_used_time.End() << "\n" << std::endl;
@@ -259,7 +286,7 @@ void HybridAStarPlanner::try_plan()
     dummy_path.poses.push_back(start_pose_);
     dummy_path.poses.push_back(goal_pose_);
 
-    path_pub_->publish(planned_path_);
+    planned_path_->publish(planned_path_);
     RCLCPP_INFO(this->get_logger(), "Path published.");
     */
 }

@@ -12,7 +12,17 @@
    * 已经大体移植完毕，需要检查
 6. [安装Glog库](https://www.cnblogs.com/tdyizhen1314/p/18047566)
 
+**2025.07.08**
 
+1. 完善了`planner`的路径发布逻辑
+2. 路径优化节点和规划节点有共用的头文件，GPT推荐单独开一个包来构建一个共用库包，构建共用包`planning_utils`，需要修改`planner`的文件结构和一些代码
+3. 新建`path_smoother`包及节点代码，待完善
+
+
+
+********
+
+GPT输入样例
 
 ```text
 1. 包名：hybrid_astar_planner
@@ -100,6 +110,25 @@
    - launch/planner.launch.py
 6. 只需可执行文件，不需要生成库/插件
 
+```
+
+```txt
+1. 包名：planning_utils
+2. 源码结构：
+   - src/bucketedqueue.cpp
+   - src/dynamicvoronoi.cpp
+   - include/planning_utils/bucketedqueue.hpp
+   - include/planning_utils/dynamicvoronoi.hpp
+   - include/planning_utils/point.hpp
+   - include/planning_utils/state_node.hpp
+   - include/planning_utils/type.hpp
+3. 可执行文件：
+   - 无可执行文件
+4. 依赖包：
+   - eigen
+   - opencv
+5. 其他需要安装的资源：
+   无
 ```
 
 
