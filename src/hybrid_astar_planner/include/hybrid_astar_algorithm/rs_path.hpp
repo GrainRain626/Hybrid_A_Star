@@ -28,7 +28,7 @@
 #ifndef HYBRID_A_STAR_RS_PATH_H
 #define HYBRID_A_STAR_RS_PATH_H
 
-#include "type.hpp"
+#include <planning_utils/type.hpp>
 
 #include <cmath>
 #include <limits>

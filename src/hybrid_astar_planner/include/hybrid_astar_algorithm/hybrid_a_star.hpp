@@ -29,8 +29,8 @@
 #define HYBRID_A_STAR_HYBRID_A_STAR_H
 
 #include "rs_path.hpp"
-#include "state_node.hpp"
 #include "dubins.hpp"
+#include "planning_utils/state_node.hpp"
 
 #include <glog/logging.h>
 

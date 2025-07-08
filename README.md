@@ -17,6 +17,8 @@
 
 2025.07.08-19:00 "add smoother and utils code but no checking"：新建`planning_utils`包来存放共用头文件，新建路径优化功能包，待完善
 
+2025.07.09-01:10 "planner v0.0.4 and utils v0.0.2": 解决了`planner v0.0.3`路径输出的问题，完善了`planning_utils`共享库的构建
+
 
 ## 问题
 

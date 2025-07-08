@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>hybrid_astar_planner</name>
-  <version>0.0.3</version>
+  <version>0.0.4</version>
   <description>hybrid A* path planner node for vehicle trajectory planning.</description>
   <maintainer email="2670378924@qq.com">lyx</maintainer>
   <license>TODO: License declaration</license>

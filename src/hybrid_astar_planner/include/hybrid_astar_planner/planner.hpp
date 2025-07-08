@@ -5,7 +5,7 @@
 #include "nav_msgs/msg/occupancy_grid.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "hybrid_astar_algorithm/hybrid_a_star.hpp"
-#include "hybrid_astar_algorithm/dynamicvoronoi.hpp"
+#include "planning_utils/dynamicvoronoi.hpp"
 
 class HybridAStarPlanner : public rclcpp::Node {
 public:

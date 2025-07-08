@@ -180,12 +180,12 @@ bool HybridAStarPlanner::isSynchronized(
 void HybridAStarPlanner::publishPath(const VectorVec4d &path) 
 {
     nav_msgs::msg::Path planned_path;  // 不要直接用成员，避免旧数据堆积
-    planned_path.header.frame_id = "world";
+    planned_path.header.frame_id = "map";
     planned_path.header.stamp = this->now();
 
     for (const auto &pose: path) {
         geometry_msgs::msg::PoseStamped pose_stamped;
-        pose_stamped.header.frame_id = "world";
+        pose_stamped.header.frame_id = "map";
         pose_stamped.header.stamp = this->now();
         pose_stamped.pose.position.x = pose.x();
         pose_stamped.pose.position.y = pose.y();
@@ -249,12 +249,13 @@ void HybridAStarPlanner::try_plan()
 
     if (kinodynamic_astar_searcher_ptr_->Search(start_state, goal_state)) {
         auto path = kinodynamic_astar_searcher_ptr_->GetPath();
+        std::cout << "Path size: " << path.size() << std::endl;
         //这里要对第一个点的前向和后向进行修正
         {
             double path_yaw = atan2((path[1] -path[0])(1), (path[1] -path[0])(0));
             if(abs(start_yaw - path_yaw) > 0.5 * M_PI)  path[0](3) = 0;
         }
-        pulishPath(path);
+        publishPath(path);
         RCLCPP_INFO(this->get_logger(), "Path published.");
         /*
         PublishVehiclePath(path, vehicle_length_, vehicle_width_, 5u);

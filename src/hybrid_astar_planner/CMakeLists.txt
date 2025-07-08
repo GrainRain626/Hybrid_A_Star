@@ -29,17 +29,15 @@ pkg_check_modules(GLOG REQUIRED libglog)
 find_package(planning_utils REQUIRED)
 
 # 头文件目录
-include_directories(
-  include
-  ${EIGEN3_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
-)
+# include_directories(
+#   include
+#   ${EIGEN3_INCLUDE_DIRS}
+#   ${OpenCV_INCLUDE_DIRS}
+# )
 
 # 源文件列表
 set(SOURCES
-  src/bucketedqueue.cpp
   src/dubins.cpp
-  src/dynamicvoronoi.cpp
   src/hybrid_a_star.cpp
   src/planner.cpp
   src/planner_node.cpp
@@ -59,13 +57,16 @@ ament_target_dependencies(planner_node
 )
 
 target_link_libraries(planner_node
-  planning_utils
   Eigen3::Eigen
   ${OpenCV_LIBS}
   ${GLOG_LIBRARIES}
 )
 target_include_directories(planner_node PRIVATE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
   ${GLOG_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 # 安装可执行文件
@@ -79,7 +80,7 @@ install(DIRECTORY include/
 )
 
 # 安装 launch 文件（如果有）
-install(DIRECTORY launch config
+install(DIRECTORY launch config rviz
   DESTINATION share/${PROJECT_NAME}
 )
 
