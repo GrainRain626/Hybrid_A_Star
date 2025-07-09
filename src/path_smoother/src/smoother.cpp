@@ -6,37 +6,10 @@
  */
 #include "path_smother/smoother.h"
 #include <iostream>
-#include <tf/transform_datatypes.h>
+// #include <tf/transform_datatypes.h>
 
 using namespace DVORONOI;
 using namespace SMOOTHER;
-
-ros::Publisher path_pub_;
-
-void Smoother::initNh(ros::NodeHandle &nh)
-{
-  path_pub_ = nh.advertise<nav_msgs::Path>("smoothed_path_iteration", 1);
-}
-
-void PublishPathSmoothed(const VectorVec4d &spath) {
-    nav_msgs::Path nav_path;
-
-    geometry_msgs::PoseStamped pose_stamped;
-    for (const auto &pose: spath) {
-        pose_stamped.header.frame_id = "world";
-        pose_stamped.pose.position.x = pose.x();
-        pose_stamped.pose.position.y = pose.y();
-        pose_stamped.pose.position.z = 0.0;
-        pose_stamped.pose.orientation = tf::createQuaternionMsgFromYaw(pose.z());
-
-        nav_path.poses.emplace_back(pose_stamped);
-    }
-    std::cout << "------发布了smoothed？-------" << std::endl;
-    nav_path.header.frame_id = "world";
-    nav_path.header.stamp = ros::Time::now();
-    path_pub_.publish(nav_path);
-}
-
 
 void Smoother::init(float kappaMax_, float obsDMax_, float vorObsDMax_)
 {

@@ -1,0 +1,15 @@
+HybridAStarPlanner:
+  ros__parameters:
+    planner.steering_angle: 30.0
+    planner.steering_angle_discrete_num: 2
+    planner.wheel_base: 0.8
+    planner.segment_length: 1.0
+    planner.segment_length_discrete_num: 8
+    planner.steering_penalty: 1.2
+    planner.steering_change_penalty: 1.5
+    planner.reversing_penalty: 2.0
+    planner.shot_distance: 15.0
+    planner.reverse_enable: true
+    planner.vehicle_length: 2.0
+    planner.vehicle_width: 1.0
+    planner.vehicle_rear_dis: 0.5

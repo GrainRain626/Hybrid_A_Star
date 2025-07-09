@@ -19,6 +19,8 @@
 
 2025.07.09-01:10 "planner v0.0.4 and utils v0.0.2": 解决了`planner v0.0.3`路径输出的问题，完善了`planning_utils`共享库的构建
 
+2025.07.09-20:00 "modify smoother code but no checking": 完善了轨迹优化的代码，未编译
+
 
 ## 问题
 

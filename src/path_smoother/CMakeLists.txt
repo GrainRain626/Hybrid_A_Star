@@ -17,9 +17,35 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(planning_utils REQUIRED)
+
+# 源文件列表
+set(SOURCES
+  src/smoother.cpp
+  src/smoother_node.cpp
+)
+
+# 添加源文件和生成可执行文件
+add_executable(smoother_node ${SOURCES})
+
+# 链接依赖库
+ament_target_dependencies(smoother_node
+  rclcpp 
+  tf2
+  planning_utils
+)
+
+# 安装可执行文件
+install(TARGETS smoother_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# 安装 launch 文件（如果有）
+install(DIRECTORY launch config
+  DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

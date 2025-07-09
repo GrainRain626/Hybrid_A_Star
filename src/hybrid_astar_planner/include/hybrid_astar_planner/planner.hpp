@@ -7,6 +7,9 @@
 #include "hybrid_astar_algorithm/hybrid_a_star.hpp"
 #include "planning_utils/dynamicvoronoi.hpp"
 
+#include <visualization_msgs/msg/marker.hpp>
+#include <visualization_msgs/msg/marker_array.hpp>
+
 class HybridAStarPlanner : public rclcpp::Node {
 public:
     HybridAStarPlanner();
@@ -24,6 +27,9 @@ private:
     void try_plan();  // 在条件满足时触发规划
     void hybridAStarInit(); // 初始化 Hybrid A* 规划器
     void publishPath(const VectorVec4d &path); // 发布规划路径
+    void publishSearchedTree(const VectorVec4d &searched_tree);
+    void publishVehiclePath(const VectorVec4d &path, double width,
+                            double length, unsigned int vehicle_interval);
     
     // 规划相关
     std::shared_ptr<HybridAStar> kinodynamic_astar_searcher_ptr_;
@@ -36,6 +42,8 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr start_sub_;
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr goal_sub_;
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_pub_;
+    rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr searched_tree_pub_;
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr vehicle_path_pub_;
 
     // 数据缓存
     nav_msgs::msg::OccupancyGrid::SharedPtr current_costmap_ptr_;

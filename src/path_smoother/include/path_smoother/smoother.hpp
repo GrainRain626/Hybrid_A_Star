@@ -9,11 +9,11 @@
 
 #include <cmath>
 #include <vector>
-#include <nav_msgs/Path.h>
+#include <nav_msgs/msg/path.hpp>
 #include <ros/ros.h>
 
-#include "hybrid_a_star/dynamicvoronoi.h"
-#include "hybrid_a_star/state_node.h"
+#include "planning_utils/dynamicvoronoi.h"
+#include "planning_utils/state_node.h"
 namespace SMOOTHER {
 /*!
    \brief This class takes a path object and smoothes the nodes of the path.
@@ -22,9 +22,8 @@ namespace SMOOTHER {
 */
 class Smoother {
  public:
-  Smoother() {}
+  Smoother() = default;
   void init(float kappaMax_, float obsDMax_, float vorObsDMax_);
-  void initNh(ros::NodeHandle &nh);
   /*!
      \brief This function takes a path consisting of nodes and attempts to iteratively smooth the same using gradient descent.
      核心函数，将由节点组成的路径采用梯度下降方法进行平滑

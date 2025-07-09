@@ -68,7 +68,9 @@ HybridAStarPlanner::HybridAStarPlanner() : Node("hybrid_astar_planner")
         std::bind(&HybridAStarPlanner::goal_callback, this, std::placeholders::_1));
     
     // 发布规划路径
-    path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/planned_path", 10);
+    path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/planned_path", 1);
+    searched_tree_pub_ = this->create_publisher<visualization_msgs::msg::Marker>("/searched_tree", 1);
+    vehicle_path_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/vehicle_path", 1);
 
     RCLCPP_INFO(this->get_logger(), "Hybrid A* Planner Node started.");
 }
@@ -206,6 +208,87 @@ void HybridAStarPlanner::publishPath(const VectorVec4d &path)
     path_pub_->publish(planned_path);
 }
 
+
+void HybridAStarPlanner::publishVehiclePath(const VectorVec4d &path, double width,
+                                         double length, unsigned int vehicle_interval = 5u) {
+    visualization_msgs::msg::MarkerArray vehicle_array;
+
+    for (unsigned int i = 0; i < path.size(); i += vehicle_interval) {
+        visualization_msgs::msg::Marker vehicle;
+
+        if (i == 0) {
+            vehicle.action = visualization_msgs::msg::Marker::DELETEALL; // 3在ROS2用常量
+        } else {
+            vehicle.action = visualization_msgs::msg::Marker::ADD;
+        }
+
+        vehicle.header.frame_id = "map";
+        vehicle.header.stamp = this->now();
+
+        vehicle.type = visualization_msgs::msg::Marker::CUBE;
+        vehicle.id = static_cast<int>(i / vehicle_interval);
+        vehicle.scale.x = width;
+        vehicle.scale.y = length;
+        vehicle.scale.z = 0.01;
+        vehicle.color.a = 0.1;
+        vehicle.color.r = 1.0;
+        vehicle.color.g = 0.0;
+        vehicle.color.b = 0.0;
+
+        vehicle.pose.position.x = path[i].x();
+        vehicle.pose.position.y = path[i].y();
+        vehicle.pose.position.z = 0.0;
+
+        // 生成四元数
+        tf2::Quaternion q;
+        q.setRPY(0, 0, path[i].z());
+        vehicle.pose.orientation.x = q.x();
+        vehicle.pose.orientation.y = q.y();
+        vehicle.pose.orientation.z = q.z();
+        vehicle.pose.orientation.w = q.w();
+
+        vehicle_array.markers.emplace_back(vehicle);
+    }
+
+    vehicle_path_pub_->publish(vehicle_array);
+}
+
+void HybridAStarPlanner::publishSearchedTree(const VectorVec4d &searched_tree) {
+    visualization_msgs::msg::Marker tree_list;
+    tree_list.header.frame_id = "map";
+    tree_list.header.stamp = this->now();
+    tree_list.type = visualization_msgs::msg::Marker::LINE_LIST;
+    tree_list.action = visualization_msgs::msg::Marker::ADD;
+    tree_list.ns = "searched_tree";
+    tree_list.scale.x = 0.02;
+
+    tree_list.color.a = 1.0;
+    tree_list.color.r = 0.0;
+    tree_list.color.g = 0.0;
+    tree_list.color.b = 0.0;
+
+    tree_list.pose.orientation.w = 1.0;
+    tree_list.pose.orientation.x = 0.0;
+    tree_list.pose.orientation.y = 0.0;
+    tree_list.pose.orientation.z = 0.0;
+
+    geometry_msgs::msg::Point point;
+    for (const auto &i: searched_tree) {
+        point.x = i.x();
+        point.y = i.y();
+        point.z = 0.0;
+        tree_list.points.emplace_back(point);
+
+        point.x = i.z();
+        point.y = i.w();
+        point.z = 0.0;
+        tree_list.points.emplace_back(point);
+    }
+
+    searched_tree_pub_->publish(tree_list);
+}
+
+
 void HybridAStarPlanner::try_plan()
 {
     // 检查是否有足够的数据进行规划
@@ -257,20 +340,9 @@ void HybridAStarPlanner::try_plan()
         }
         publishPath(path);
         RCLCPP_INFO(this->get_logger(), "Path published.");
-        /*
-        PublishVehiclePath(path, vehicle_length_, vehicle_width_, 5u);
-        PublishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
-        PublishCurrentStartAndGoal();
-        */
-        /*
-        // 路径平滑过程
-        smoother.tracePath(path);
-        Timer smooth_used_time;
-        smoother.smoothPath(voronoiDiagram);
-        std::cout << "Soomthen the path time(ms): " << smooth_used_time.End() << "\n" << std::endl;
-        auto path_smoothed = smoother.getPath();
-        PublishPathSmoothed(path_smoothed);
-        */
+        
+        publishVehiclePath(path, vehicle_length_, vehicle_width_, 5u);
+        publishSearchedTree(kinodynamic_astar_searcher_ptr_->GetSearchedTree());
     }
     else {
         RCLCPP_ERROR(this->get_logger(), "Planning failed, no valid path found.");
