@@ -5,7 +5,6 @@
 #include "nav_msgs/msg/occupancy_grid.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "hybrid_astar_algorithm/hybrid_a_star.hpp"
-#include "planning_utils/dynamicvoronoi.hpp"
 
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
@@ -33,9 +32,6 @@ private:
     
     // 规划相关
     std::shared_ptr<HybridAStar> kinodynamic_astar_searcher_ptr_;
-    
-    // The voronoi diagram
-    DVORONOI::DynamicVoronoi voronoiDiagram; //Voroni Diagram
 
     // ROS 接口
     rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;

@@ -4,7 +4,7 @@
  * 
  * @date 2019-11-19
  */
-#include "path_smother/smoother.h"
+#include "path_smoother/smoother.hpp"
 #include <iostream>
 // #include <tf/transform_datatypes.h>
 

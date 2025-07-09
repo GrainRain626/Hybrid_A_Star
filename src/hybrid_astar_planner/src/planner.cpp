@@ -68,9 +68,9 @@ HybridAStarPlanner::HybridAStarPlanner() : Node("hybrid_astar_planner")
         std::bind(&HybridAStarPlanner::goal_callback, this, std::placeholders::_1));
     
     // 发布规划路径
-    path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/planned_path", 1);
-    searched_tree_pub_ = this->create_publisher<visualization_msgs::msg::Marker>("/searched_tree", 1);
-    vehicle_path_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/vehicle_path", 1);
+    path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/planned_path", qos_profile);
+    searched_tree_pub_ = this->create_publisher<visualization_msgs::msg::Marker>("/searched_tree", qos_profile);
+    vehicle_path_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/vehicle_path", qos_profile);
 
     RCLCPP_INFO(this->get_logger(), "Hybrid A* Planner Node started.");
 }
@@ -135,25 +135,6 @@ void HybridAStarPlanner::hybridAStarInit()
             }
         }
     }
-    //这里生成维诺图, 和地图一样的尺寸（width * height），不是米制
-    bool** binMap;//二维数组，
-    binMap = new bool*[current_costmap_ptr_->info.width];
-
-    for (int x = 0; x < current_costmap_ptr_->info.width; x++) { binMap[x] = new bool[current_costmap_ptr_->info.width]; }//这里可简化为一次申请
-
-    for (int x = 0; x < current_costmap_ptr_->info.width; ++x) {
-        for (int y = 0; y < current_costmap_ptr_->info.width; ++y) {
-        binMap[x][y] = current_costmap_ptr_->data[y * current_costmap_ptr_->info.width + x] ? true : false;
-        }
-    }//转化为二值地图
-
-    voronoiDiagram.initializeMap(current_costmap_ptr_->info.width, current_costmap_ptr_->info.width,
-                                    current_costmap_ptr_->info.resolution, binMap);//注意这里传入到DynamicVoronoi里并进行保存，所以没有delete
-    voronoiDiagram.update();
-    voronoiDiagram.visualize("");//将Voronoi Diagram初始化、更新并显示
-
-    RCLCPP_INFO(this->get_logger(), "Hybrid A* Planner initialized with map resolution: %f, width: %d, height: %d",
-                current_costmap_ptr_->info.resolution, current_costmap_ptr_->info.width, current_costmap_ptr_->info.height);
 }
 
 // 检查地图、起点和目标点是否同步

@@ -10,10 +10,10 @@
 #include <cmath>
 #include <vector>
 #include <nav_msgs/msg/path.hpp>
-#include <ros/ros.h>
 
-#include "planning_utils/dynamicvoronoi.h"
-#include "planning_utils/state_node.h"
+#include "planning_utils/dynamicvoronoi.hpp"
+#include "planning_utils/state_node.hpp"
+
 namespace SMOOTHER {
 /*!
    \brief This class takes a path object and smoothes the nodes of the path.

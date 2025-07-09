@@ -1,8 +1,12 @@
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
+#include <nav_msgs/msg/occupancy_grid.hpp>
 #include "smoother.hpp"
 
-class class SmootherNode : public rclcpp::Node {
+using namespace SMOOTHER;
+using namespace DVORONOI;
+
+class SmootherNode : public rclcpp::Node {
 public:
     SmootherNode();
 
@@ -16,7 +20,7 @@ private:
     rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr map_sub_;
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr smooth_path_pub_;
 
-    DVORONOI::DynamicVoronoi voronoiDiagram; //Voroni Diagram
+    DynamicVoronoi voronoiDiagram; //Voroni Diagram
     std::shared_ptr<Smoother> smoother_;
     nav_msgs::msg::Path smoothed_path_; // 规划结果
 };

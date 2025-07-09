@@ -24,6 +24,7 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(visualization_msgs REQUIRED)
 pkg_check_modules(GLOG REQUIRED libglog)
 # 查找planning_utils包
 find_package(planning_utils REQUIRED)
@@ -53,6 +54,7 @@ ament_target_dependencies(planner_node
   nav_msgs 
   geometry_msgs
   tf2
+  visualization_msgs
   planning_utils
 )
 
@@ -74,7 +76,7 @@ install(TARGETS planner_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# 安装头文件（如果后续封装 Hybrid A* 类）
+# 安装头文件
 install(DIRECTORY include/
   DESTINATION include/
 )

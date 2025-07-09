@@ -18,7 +18,10 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV REQUIRED)
 find_package(planning_utils REQUIRED)
 
 # 源文件列表
@@ -33,13 +36,31 @@ add_executable(smoother_node ${SOURCES})
 # 链接依赖库
 ament_target_dependencies(smoother_node
   rclcpp 
+  nav_msgs 
   tf2
   planning_utils
+)
+
+target_link_libraries(smoother_node
+  Eigen3::Eigen
+  ${OpenCV_LIBS}
+)
+
+target_include_directories(smoother_node PRIVATE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${EIGEN3_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 # 安装可执行文件
 install(TARGETS smoother_node
   DESTINATION lib/${PROJECT_NAME}
+)
+
+# 安装头文件
+install(DIRECTORY include/
+  DESTINATION include/
 )
 
 # 安装 launch 文件（如果有）

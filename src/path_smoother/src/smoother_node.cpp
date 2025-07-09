@@ -1,4 +1,29 @@
-#include "path_smother/smoother_node.hpp"
+#include "path_smoother/smoother_node.hpp"
+#include "planning_utils/timer.hpp"
+
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
+
+VectorVec4d pathMsgToVectorVec4d(const nav_msgs::msg::Path &path_msg)
+{
+    VectorVec4d result;
+    result.reserve(path_msg.poses.size());
+
+    for (const auto & pose_stamped : path_msg.poses) {
+        double x = pose_stamped.pose.position.x;
+        double y = pose_stamped.pose.position.y;
+        double z = pose_stamped.pose.position.z;  // 你如果用不上，可以写0.0
+        const auto & q = pose_stamped.pose.orientation;
+
+        // 四元数转yaw
+        tf2::Quaternion quat(q.x, q.y, q.z, q.w);
+        double roll, pitch, yaw;
+        tf2::Matrix3x3(quat).getRPY(roll, pitch, yaw);
+
+        result.emplace_back(Eigen::Vector4d(x, y, yaw, 0.0));
+    }
+    return result;
+}
 
 SmootherNode::SmootherNode() : Node("smoother_node") {
     /*
@@ -29,26 +54,25 @@ SmootherNode::SmootherNode() : Node("smoother_node") {
     // 订阅地图、规划路径
     map_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
         "/processed_map", qos_profile,
-        std::bind(&HybridAStarPlanner::map_callback, this, std::placeholders::_1));
+        std::bind(&SmootherNode::map_callback, this, std::placeholders::_1));
     path_sub_ = this->create_subscription<nav_msgs::msg::Path>(
-        "/planned_path",
-        10,
+        "/planned_path", qos_profile,
         std::bind(&SmootherNode::pathCallback, this, std::placeholders::_1)
     );
 
     // 创建发布器
-    smooth_path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/smoothed_path", 10);
+    smooth_path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/smoothed_path", qos_profile);
 
     // 初始化Smoother类
     smoother_ = std::make_shared<Smoother>();
-    smoother->init(kappaMax, obsDMax, vorObsDMax);
+    smoother_->init(kappaMax, obsDMax, vorObsDMax);
 
     RCLCPP_INFO(this->get_logger(), "Smoother node started, waiting for /planned_path...");
 }
 
-void HybridAStarPlanner::map_callback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+void SmootherNode::map_callback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
 {
-    current_costmap_ptr_ = msg;
+    auto current_costmap_ptr_ = msg;
     RCLCPP_INFO(this->get_logger(), "load map successfully, resolution: %f, timestamp: %f",
                 current_costmap_ptr_->info.resolution, current_costmap_ptr_->header.stamp.sec + current_costmap_ptr_->header.stamp.nanosec * 1e-9);
     
@@ -76,21 +100,18 @@ void SmootherNode::pathCallback(const nav_msgs::msg::Path::SharedPtr msg)
         RCLCPP_WARN(this->get_logger(), "Received empty path. Skipping smoothing.");
         return;
     }
+    auto path = pathMsgToVectorVec4d(*msg);
     // 路径平滑处理
-    smoother_->tracePath(msg->poses);
+    smoother_->tracePath(path);
     Timer smooth_used_time;
-    smoother.smoothPath(voronoiDiagram);
+    smoother_->smoothPath(voronoiDiagram);
     std::cout << "Soomthen the path time(ms): " << smooth_used_time.End() << "\n" << std::endl;
-    auto smoothed_path = smoother.getPath();
-
-    // 设置发布路径的header
-    smoothed_path.header.stamp = this->now();
-    smoothed_path.header.frame_id = msg->header.frame_id;
+    auto smoothed_path = smoother_->getPath();
 
     // 发布平滑后的路径
     publishPath(smoothed_path);
 
-    RCLCPP_INFO(this->get_logger(), "Smoothed path published, poses count: %zu", smoothed_path.poses.size());
+    RCLCPP_INFO(this->get_logger(), "Smoothed path published, poses count: %zu", smoothed_path.size());
 }
 
 // 发布优化路径
@@ -126,7 +147,7 @@ void SmootherNode::publishPath(const VectorVec4d &path)
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<SmootherNode>>());
+    rclcpp::spin(std::make_shared<SmootherNode>());
     rclcpp::shutdown();
     return 0;
 }
