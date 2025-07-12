@@ -36,6 +36,12 @@
 
 5. 不知道车辆控制和车辆可视化的代码在哪？
 
+**2025.07.09**
+
+1. 添加`car_msgs`包
+2. 添加`car_simulator`包
+3. 添加`mpc_car`包，`mpc_car.hpp`和`mpc_car.cpp`文件需要重构，`launch.py`和`package`文件需要重写
+
 ********
 
 GPT输入样例
