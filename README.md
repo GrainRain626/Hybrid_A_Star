@@ -27,6 +27,8 @@
 
 2025.07.12-17:20 "add mpc_car code but no checking"：移植了部分mpc的源码，还有部分未完成，且未编译
 
+2025.07.15-00:30 "mpc_car v0.0.1 but bad bug"：完善了MPC代码能跑了，但是有段错误严重bug
+
 
 ## 问题
 

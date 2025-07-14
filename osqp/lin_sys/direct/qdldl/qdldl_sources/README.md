@@ -5,6 +5,9 @@ A free LDL factorisation routine for quasi-definite linear systems: `Ax=b`
 [![Build status](https://ci.appveyor.com/api/projects/status/ns4br7v6y3i5stai/branch/master?svg=true)](https://ci.appveyor.com/project/bstellato/qdldl-8q1mv/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/oxfordcontrol/qdldl/badge.svg)](https://coveralls.io/github/oxfordcontrol/qdldl)
 
+## Interfaces
+
+You can find a Python interface at [qdldl-python](https://github.com/oxfordcontrol/qdldl-python) and a pure Julia implementation at [QDLDL.jl](https://github.com/oxfordcontrol/QDLDL.jl).
 
 ## Getting started
 To start using QDLDL, first clone the repository
@@ -104,6 +107,26 @@ For example, when creating a library `foo` you can add
 add_library(foo foo.c foo.h $<TARGET_OBJECTS:qdldlobject>)
 ```
 for more details see the [cmake documentation](https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries).
+
+
+## Citing
+If you find this code useful for your research, please cite the following paper available in this [preprint](https://arxiv.org/pdf/1711.08013.pdf)
+
+```
+@article{osqp,
+  author = {Stellato, B. and Banjac, G. and Goulart, P. and Bemporad, A. and Boyd, S.},
+  title = {{OSQP}: An Operator Splitting Solver for Quadratic Programs},
+  journal = {ArXiv e-prints},
+  year = {2017},
+  month = nov,
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System},
+  adsurl = {http://adsabs.harvard.edu/abs/2017arXiv171108013S},
+  archiveprefix = {arXiv},
+  eprint = {1711.08013},
+  keywords = {Mathematics - Optimization and Control},
+  primaryclass = {math.OC},
+}
+```
 
 
 ## The algorithm

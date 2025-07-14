@@ -1,4 +1,4 @@
-HybridAStarPlanner:
+path_smoother:
   ros__parameters:
     planner.steering_angle: 30.0
     planner.steering_angle_discrete_num: 2

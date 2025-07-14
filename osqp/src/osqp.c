@@ -483,7 +483,20 @@ c_int osqp_solve(OSQPWorkspace *work) {
           work->settings->check_termination);
       } // If time condition is met
     }   // If adaptive rho enabled and interval set to auto
-# endif // PROFILING
+# else // PROFILING
+    if (work->settings->adaptive_rho && !work->settings->adaptive_rho_interval) {
+      // Set adaptive_rho_interval to constant value
+      if (work->settings->check_termination) {
+        // If check_termination is enabled, we set it to a multiple of the check
+        // termination interval
+        work->settings->adaptive_rho_interval = ADAPTIVE_RHO_MULTIPLE_TERMINATION *
+                                                work->settings->check_termination;
+      } else {
+        // If check_termination is disabled we set it to a predefined fix number
+        work->settings->adaptive_rho_interval = ADAPTIVE_RHO_FIXED;
+      }
+    }
+# endif /* ifdef PROFILING */
 
     // Adapt rho
     if (work->settings->adaptive_rho &&
@@ -981,7 +994,7 @@ c_int osqp_warm_start_y(OSQPWorkspace *work, const c_float *y) {
   // Update warm_start setting to true
   if (!work->settings->warm_start) work->settings->warm_start = 1;
 
-  // Copy primal variable into the iterate y
+  // Copy dual variable into the iterate y
   prea_vec_copy(y, work->y, work->data->m);
 
   // Scale iterate

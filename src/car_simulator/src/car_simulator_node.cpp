@@ -1,4 +1,5 @@
 #include "car_simulator/car_simulator_node.hpp"
+#include <tf2/LinearMath/Matrix3x3.h>
 
 CarSimulatorNode::CarSimulatorNode() : Node("car_simulator_node") {
     this->declare_parameter<double>("l", 2.5);
@@ -18,11 +19,11 @@ CarSimulatorNode::CarSimulatorNode() : Node("car_simulator_node") {
     delay_ = this->get_parameter("delay").as_double();
     input_.setZero();
 
-    odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("odom_car", 1);
+    odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/odom_car", 1);
     cmd_sub_ = this->create_subscription<car_msgs::msg::CarCmd>(
-        "car_cmd", 1, std::bind(&CarSimulatorNode::cmd_callback, this, std::placeholders::_1));
+        "/car_cmd", 1, std::bind(&CarSimulatorNode::cmd_callback, this, std::placeholders::_1));
     path_sub_ = this->create_subscription<nav_msgs::msg::Path>(
-        "/hybrid_a_star_zm0612/searched_path_smoothed_with_d", 1, std::bind(&CarSimulatorNode::path_callback, this, std::placeholders::_1));
+        "/smoothed_path", 1, std::bind(&CarSimulatorNode::path_callback, this, std::placeholders::_1));
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
 
     sim_timer_ = this->create_wall_timer(
@@ -89,7 +90,7 @@ void CarSimulatorNode::timer_callback() {
   // 发布Odometry
   auto odom_msg = nav_msgs::msg::Odometry();
   odom_msg.header.stamp = this->now();
-  odom_msg.header.frame_id = "world";
+  odom_msg.header.frame_id = "map";
   odom_msg.pose.pose.position.x = car_.state(0);
   odom_msg.pose.pose.position.y = car_.state(1);
   odom_msg.pose.pose.position.z = 0.0;
@@ -113,7 +114,7 @@ void CarSimulatorNode::timer_callback() {
   // 发布TF
   geometry_msgs::msg::TransformStamped tf_msg;
   tf_msg.header.stamp = this->now();
-  tf_msg.header.frame_id = "world";
+  tf_msg.header.frame_id = "map";
   tf_msg.child_frame_id = "ground_link";
   tf_msg.transform.translation.x = car_.state(0);
   tf_msg.transform.translation.y = car_.state(1);

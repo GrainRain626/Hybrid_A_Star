@@ -8,6 +8,8 @@ def generate_launch_description():
     planner_share = get_package_share_directory('hybrid_astar_planner')
     smoother_share = get_package_share_directory('path_smoother')
     map_tools_share = get_package_share_directory('map_tools')
+    mpc_car_share = get_package_share_directory('mpc_car')
+    car_simulator_share = get_package_share_directory("car_simulator")
     rviz_cfg = os.path.join(planner_share, 'rviz', 'planner_view.rviz')
 
     return LaunchDescription([
@@ -43,6 +45,22 @@ def generate_launch_description():
             executable="pose_bridge_node",
             name="pose_bridge",
             output="screen",
+        ),
+        # 启动车辆仿真节点
+        Node(
+            package="car_simulator",
+            executable="car_simulator_node",
+            name="car_simulator_node",
+            output="screen",
+            parameters=[os.path.join(car_simulator_share, "config", "car_simulator.yaml")]
+        ),
+        # 启动MPC车辆节点
+        Node(
+            package='mpc_car',
+            executable='mpc_car_node',
+            name='mpc_car',
+            output='screen',
+            parameters=[os.path.join(mpc_car_share, 'config', 'mpc_car.yaml')]
         ),
         # 订阅processed_map的节点，延时3秒启动
         TimerAction(

@@ -4,6 +4,14 @@ cmake_minimum_required (VERSION 3.2)
 # Project name
 project (osqp)
 
+set(OSQP_VERSION "0.0.0" CACHE STRING "The version number of OSQP")
+if(NOT OSQP_VERSION STREQUAL "0.0.0")
+    configure_file (
+        "${PROJECT_SOURCE_DIR}/configure/version.h.in"
+        "${PROJECT_SOURCE_DIR}/include/version.h"
+    )
+endif()
+
 # Export compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -47,12 +55,11 @@ else()
 endif()
 
 # Is printing enabled?
-option (PRINTING "Enable solver printing" OFF)
+option (PRINTING "Enable solver printing" ON)
 if (DEFINED EMBEDDED)
     message(STATUS "Disabling printing for embedded")
     set(PRINTING OFF)
 endif()
-set(PRINTING OFF)
 message(STATUS "Printing is ${PRINTING}")
 
 
@@ -77,7 +84,7 @@ option (DFLOAT "Use float numbers instead of doubles" OFF)
 message(STATUS "Floats are ${DFLOAT}")
 
 # Use long integers for indexing
-option (DLONG "Use long integers (64bit) for indexing" OFF)
+option (DLONG "Use long integers (64bit) for indexing" ON)
 if (NOT (CMAKE_SIZEOF_VOID_P EQUAL 8))
 	message(STATUS "Disabling long integers (64bit) on 32bit machine")
 	set(DLONG OFF)
@@ -142,6 +149,7 @@ if (NOT MSVC)
 
     if (COVERAGE)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 	if(FORTRAN)
 		set(CMAKE_FORTRAN_FLAGS "${CMAKE_FORTRAN_FLAGS} --coverage")
 	endif(FORTRAN)
@@ -344,7 +352,7 @@ endif()
 # Create CMake packages for the install directory
 # ----------------------------------------------
 
-set(ConfigPackageLocation lib/cmake/osqp)
+set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/osqp)
 
 install(EXPORT ${PROJECT_NAME}
         FILE osqp-targets.cmake
@@ -412,25 +420,30 @@ if (UNITTESTS)
     # Direct linear solver testing
     include_directories(tests)
     add_executable(osqp_tester
-                ${PROJECT_SOURCE_DIR}/tests/osqp_tester.c
-                ${PROJECT_SOURCE_DIR}/tests/osqp_tester.h
-		${PROJECT_SOURCE_DIR}/tests/minunit.h
-                ${test_headers}
-                ${codegen_test_headers})
-    target_link_libraries (osqp_tester osqpstatic)
+            ${PROJECT_SOURCE_DIR}/tests/osqp_tester.cpp
+            ${PROJECT_SOURCE_DIR}/tests/osqp_tester.h
+            ${test_headers}
+            ${codegen_test_headers}
+            )
+    set_target_properties(osqp_tester
+            PROPERTIES
+                CXX_STANDARD 11
+                CXX_STANDARD_REQUIRED YES
+                CXX_EXTENSIONS NO
+            )
+    target_link_libraries (osqp_tester osqpstatic ${CMAKE_DL_LIBS})
 
     # Add custom memory target
     add_executable(osqp_tester_custom_memory
-                   EXCLUDE_FROM_ALL
-                   ${PROJECT_SOURCE_DIR}/tests/osqp_tester.c
-                   ${PROJECT_SOURCE_DIR}/tests/osqp_tester.h
-	           ${PROJECT_SOURCE_DIR}/tests/minunit.h
-                   ${test_headers}
-                   ${codegen_test_headers}
+            EXCLUDE_FROM_ALL
+            ${PROJECT_SOURCE_DIR}/tests/osqp_tester.cpp
+            ${PROJECT_SOURCE_DIR}/tests/osqp_tester.h
+            ${test_headers}
+            ${codegen_test_headers}
 		   ${PROJECT_SOURCE_DIR}/tests/custom_memory/custom_memory.c
 		   ${PROJECT_SOURCE_DIR}/tests/custom_memory/custom_memory.h
 		)
-    target_link_libraries (osqp_tester_custom_memory osqpstatic)
+    target_link_libraries (osqp_tester_custom_memory osqpstatic ${CMAKE_DL_LIBS})
 
     # Add testing
     include(CTest)

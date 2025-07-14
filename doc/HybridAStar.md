@@ -153,14 +153,14 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 |     数据名     | 数据描述 |         数据类型          |      订阅       |
 | :------------: | :------: | :-----------------------: | :-------------: |
-| `smoothedPath` | 平滑轨迹 |   `nav_msgs::msg::Path`   | `/planned_path` |
-| `currentState` | 当前状态 | `nav_msgs::msg::Odometry` |     `/odom`     |
+| `smoothedPath` | 平滑轨迹 |   `nav_msgs::msg::Path`   | `/smoothedPath` |
+| `currentState` | 当前状态 | `nav_msgs::msg::Odometry` |   `/odom_car`   |
 
 **输出**：
 
-|    数据名    | 数据描述 |                   数据类型                   |    发布    |
-| :----------: | :------: | :------------------------------------------: | :--------: |
-| `cnlCommand` | 控制命令 | `geometry_msgs::msg::Twist` 或自定义控制消息 | `/cmd_vel` |
+|    数据名    | 数据描述 |           数据类型            |    发布    |
+| :----------: | :------: | :---------------------------: | :--------: |
+| `cnlCommand` | 控制命令 | 自定义`car_msgs::msg::CarCmd` | `/car_cmd` |
 
 ### 2.5 仿真器
 
@@ -170,9 +170,10 @@ This project uses C++ and ROS2 to implement vehicle trajectory planning and cont
 
 **输入**：
 
-|    数据名    | 数据描述 |                   数据类型                   |    订阅    |
-| :----------: | :------: | :------------------------------------------: | :--------: |
-| `cnlCommand` | 控制命令 | `geometry_msgs::msg::Twist` 或自定义控制消息 | `/cmd_vel` |
+|     数据名     | 数据描述 |           数据类型            |      订阅       |
+| :------------: | :------: | :---------------------------: | :-------------: |
+|  `cnlCommand`  | 控制命令 | 自定义`car_msgs::msg::CarCmd` |   `/car_cmd`    |
+| `smoothedPath` | 平滑轨迹 |     `nav_msgs::msg::Path`     | `/smoothedPath` |
 
 **输出**：
 
