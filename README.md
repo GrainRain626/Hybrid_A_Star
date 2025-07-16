@@ -29,6 +29,8 @@
 
 2025.07.15-00:30 "mpc_car v0.0.1 but bad bug"：完善了MPC代码能跑了，但是有段错误严重bug
 
+2025.07.16-12:10 "fixed mpc bug but no checking"：使用Cursor修改了bug，未验证
+
 
 ## 问题
 

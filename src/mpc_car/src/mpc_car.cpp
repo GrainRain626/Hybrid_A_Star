@@ -102,13 +102,21 @@ int MpcCar::solveQP(const Eigen::VectorXd& x0_observe) {
     x0_observe_ = x0_observe;
     std::cout << 2 << std::endl;
     if (historyInput_.empty()) {
-        // 根据实际需求，这里可以插入上一次控制量或零向量
-        // historyInput_.push_back(Eigen::VectorXd::Zero(m));
-        
+        // 如果历史输入为空，初始化为适当的值
+        for (int i = 0; i < history_length_; ++i) {
+            historyInput_.emplace_back(0, 0);
+        }
     }
-    historyInput_.pop_front();
+    
+    // 只有当队列不为空时才pop
+    if (!historyInput_.empty()) {
+        historyInput_.pop_front();
+        historyInput_.push_back(predictInput_.front());
+    } else {
+        // 如果队列仍然为空（理论上不应该发生，但为了安全），添加一个元素
+        historyInput_.push_back(predictInput_.front());
+    }
     std::cout << 3 << std::endl;
-    historyInput_.push_back(predictInput_.front());
 
     //这是XX的约束，由预测出来的delta，结合ddelta_max来确定delta的上下界？
     lu_.coeffRef(2, 0) = predictInput_.front()(1) - ddelta_max_ * dt_;
